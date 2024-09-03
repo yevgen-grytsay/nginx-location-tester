@@ -101,7 +101,7 @@ window.addEventListener("load", function(evt) {
 
     var print = function(message) {
         var d = document.createElement("div");
-        d.textContent = message;
+        d.innerHTML = message.replaceAll(/\n+/g, "\n").replaceAll("\n", "<br>");
         output.appendChild(d);
         output.scroll(0, output.scrollHeight);
     };

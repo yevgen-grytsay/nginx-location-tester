@@ -41,9 +41,12 @@ func main() {
 			// lastLogLine = parsedLogLine
 			fmt.Printf("%#v\n", parsedLogLine)
 
-			item, ok := logSequenceMap[parsedLogLine.hash()]
+			requestFullId := parsedLogLine.RequestFullId.id()
+			item, ok := logSequenceMap[requestFullId]
+			isNewRequest := false
 			if !ok {
-				item = LogSequence{PidAndTid: parsedLogLine.PidAndTid, RequestId: parsedLogLine.RequestId}
+				item = LogSequence{RequestFullId: parsedLogLine.RequestFullId}
+				isNewRequest = true
 			}
 			item.push(parsedLogLine)
 			/* if item.isComplete() {
@@ -52,9 +55,17 @@ func main() {
 
 				os.Exit(0)
 			} */
-			logSequenceMap[parsedLogLine.hash()] = item
+			logSequenceMap[requestFullId] = item
 
-			logChannel <- WsMessage{Text: parsedLogLine.Message}
+			if item.isComplete() {
+				logChannel <- WsMessage{Text: item.toWsMessageText()}
+			}
+
+			// logChannel <- WsMessage{Text: parsedLogLine.Message}
+
+			if isNewRequest {
+				logChannel <- WsMessage{Text: fmt.Sprintf("Total requests: %d", len(logSequenceMap))}
+			}
 		}
 	}()
 
@@ -74,22 +85,25 @@ const (
 )
 
 type LogLine struct {
-	LogLevel  LogLevel
-	Message   string
+	LogLevel      LogLevel
+	Message       string
+	RequestFullId RequestFullId
+}
+
+type RequestFullId struct {
 	PidAndTid string
 	RequestId string
 }
 
-func (l LogLine) hash() string {
-	return fmt.Sprintf("%s_%s", l.PidAndTid, l.RequestId)
+func (requestFullId RequestFullId) id() string {
+	return fmt.Sprintf("%s_%s", requestFullId.PidAndTid, requestFullId.RequestId)
 }
 
 type LogSequence struct {
-	PidAndTid    string
-	RequestId    string
-	lines        []LogLine
-	hasStartLine bool
-	hasEndLine   bool
+	RequestFullId RequestFullId
+	lines         []LogLine
+	hasStartLine  bool
+	hasEndLine    bool
 }
 
 func (s *LogSequence) push(line *LogLine) {
@@ -108,6 +122,21 @@ func (s LogSequence) isComplete() bool {
 	return s.hasEndLine && s.hasStartLine
 }
 
+func (s LogSequence) toWsMessageText() string {
+	var lines []string = make([]string, len(s.lines))
+
+	for _, item := range s.lines {
+		lines = append(lines, item.Message)
+	}
+
+	return strings.Join(lines, "\n")
+	/* var sb strings.Builder
+
+	for item := range s.lines {
+		sb.WriteString(item.Message)
+	} */
+}
+
 func parseLogLine(text string) (*LogLine, error) {
 	// re := regexp.MustCompile(`(?P<Date>\d{4}/\d{2}/\d{2}) (?P<Time>\d{2}:\d{2}:\d{2}) \[(?P<Level>\w+)\] \d+#\d+: \*\d+ (?P<Message>.*?), client: (?P<ClientIP>[\d\.]+), server: (?P<ServerName>[^,]+), request: "(?P<Request>[^"]+)", host: "(?P<Host>[^"]+)"`)
 	re := regexp.MustCompile(`(?P<Date>\d{4}/\d{2}/\d{2}) (?P<Time>\d{2}:\d{2}:\d{2}) \[(?P<Level>\w+)\] (?P<PidAndTid>\d+#\d+): \*(?P<RequestID>\d+) (?P<Message>.*)`)
@@ -120,6 +149,7 @@ func parseLogLine(text string) (*LogLine, error) {
 	groupNames := re.SubexpNames()
 
 	result := &LogLine{}
+	rid := RequestFullId{}
 	for i, name := range groupNames {
 		if i != 0 && name != "" {
 			switch name {
@@ -128,12 +158,14 @@ func parseLogLine(text string) (*LogLine, error) {
 			case "Message":
 				result.Message = match[i]
 			case "PidAndTid":
-				result.PidAndTid = match[i]
+				rid.PidAndTid = match[i]
 			case "RequestID":
-				result.RequestId = match[i]
+				rid.RequestId = match[i]
 			}
 		}
 	}
+
+	result.RequestFullId = rid
 
 	return result, nil
 }
