@@ -115,6 +115,15 @@ window.addEventListener("load", function(evt) {
         output.scroll(0, output.scrollHeight);
     };
 
+	const printResponse = function (body) {
+		const data = JSON.parse(body)
+		const prettyJson = JSON.stringify(data, null, '  ')
+		var d = document.createElement("div");
+        d.innerHTML = "<pre>" + prettyJson + "</pre>";
+        output.appendChild(d);
+        output.scroll(0, output.scrollHeight);
+	}
+
     document.getElementById("open").onclick = function(evt) {
         if (ws) {
             return false;
@@ -128,7 +137,7 @@ window.addEventListener("load", function(evt) {
             ws = null;
         }
         ws.onmessage = function(evt) {
-            print("RESPONSE: " + evt.data);
+            printResponse(evt.data);
         }
         ws.onerror = function(evt) {
             print("ERROR: " + evt.data);

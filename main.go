@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"regexp"
@@ -21,6 +22,18 @@ func main() {
 	}
 
 	var logChannel chan WsMessage = make(chan WsMessage)
+
+	var lineFilter LineFilter = LineFilter{filterList: []FilterItem{
+		ByPrefix{Prefix: "http request line:"},
+		ByPrefix{Prefix: "http uri:"},
+
+		ByPrefix{Prefix: "test location:"},
+		ByPrefix{Prefix: "using configuration "},
+
+		ByPrefix{Prefix: "http script var:"},
+		ByPrefix{Prefix: "trying to use file:"},
+		ByPrefix{Prefix: "http filename:"},
+	}}
 
 	go func() {
 		// for line := range t.Lines {
@@ -59,14 +72,15 @@ func main() {
 			logSequenceMap[requestFullId] = item
 
 			if item.isComplete() {
-				logChannel <- WsMessage{Text: item.toWsMessageText()}
+				jsonB, _ := json.Marshal(item.withFilteredLines(lineFilter))
+				logChannel <- WsMessage{Text: string(jsonB)}
 				delete(logSequenceMap, requestFullId)
 			}
 
 			// logChannel <- WsMessage{Text: parsedLogLine.Message}
 
 			if isNewRequest {
-				logChannel <- WsMessage{Text: fmt.Sprintf("Total requests: %d", len(logSequenceMap))}
+				logChannel <- WsMessage{Text: fmt.Sprintf("\"Total requests: %d\"", len(logSequenceMap))}
 			}
 		}
 	}()
@@ -103,13 +117,13 @@ func (requestFullId RequestFullId) id() string {
 
 type LogSequence struct {
 	RequestFullId RequestFullId
-	lines         []LogLine
+	Lines         []LogLine
 	hasStartLine  bool
 	hasEndLine    bool
 }
 
 func (s *LogSequence) push(line *LogLine) {
-	s.lines = append(s.lines, *line)
+	s.Lines = append(s.Lines, *line)
 
 	if strings.HasPrefix(line.Message, "http process request line") {
 		s.hasStartLine = true
@@ -125,9 +139,9 @@ func (s LogSequence) isComplete() bool {
 }
 
 func (s LogSequence) toWsMessageText() string {
-	var lines []string = make([]string, len(s.lines))
+	var lines []string = make([]string, len(s.Lines))
 
-	var filter LineFilter = LineFilter{filterList: []FilterItem{
+	/* var filter LineFilter = LineFilter{filterList: []FilterItem{
 		ByPrefix{Prefix: "http request line:"},
 		ByPrefix{Prefix: "http uri:"},
 
@@ -137,13 +151,21 @@ func (s LogSequence) toWsMessageText() string {
 		ByPrefix{Prefix: "http script var:"},
 		ByPrefix{Prefix: "trying to use file:"},
 		ByPrefix{Prefix: "http filename:"},
-	}}
+	}} */
 
-	for _, item := range filter.Filter(s.lines) {
+	// for _, item := range filter.Filter(s.Lines) {
+	for _, item := range s.Lines {
 		lines = append(lines, item.Message)
 	}
 
 	return strings.Join(lines, "\n")
+}
+
+func (s LogSequence) withFilteredLines(lf LineFilter) *LogSequence {
+	return &LogSequence{
+		RequestFullId: s.RequestFullId,
+		Lines:         lf.Filter(s.Lines),
+	}
 }
 
 func parseLogLine(text string) (*LogLine, error) {
