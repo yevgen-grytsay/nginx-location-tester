@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"regexp"
 	"strings"
 
@@ -12,7 +13,7 @@ func main() {
 	// Create a tail
 	t, err := tail.TailFile(
 		"/var/log/nginx/error.log",
-		tail.Config{Follow: true, ReOpen: true},
+		tail.Config{Follow: true, ReOpen: true, CompleteLines: true, Location: &tail.SeekInfo{Whence: io.SeekEnd}},
 		// tail.Config{Follow: false},
 	)
 	if err != nil {
@@ -59,6 +60,7 @@ func main() {
 
 			if item.isComplete() {
 				logChannel <- WsMessage{Text: item.toWsMessageText()}
+				delete(logSequenceMap, requestFullId)
 			}
 
 			// logChannel <- WsMessage{Text: parsedLogLine.Message}
@@ -125,16 +127,23 @@ func (s LogSequence) isComplete() bool {
 func (s LogSequence) toWsMessageText() string {
 	var lines []string = make([]string, len(s.lines))
 
-	for _, item := range s.lines {
+	var filter LineFilter = LineFilter{filterList: []FilterItem{
+		ByPrefix{Prefix: "http request line:"},
+		ByPrefix{Prefix: "http uri:"},
+
+		ByPrefix{Prefix: "test location:"},
+		ByPrefix{Prefix: "using configuration "},
+
+		ByPrefix{Prefix: "http script var:"},
+		ByPrefix{Prefix: "trying to use file:"},
+		ByPrefix{Prefix: "http filename:"},
+	}}
+
+	for _, item := range filter.Filter(s.lines) {
 		lines = append(lines, item.Message)
 	}
 
 	return strings.Join(lines, "\n")
-	/* var sb strings.Builder
-
-	for item := range s.lines {
-		sb.WriteString(item.Message)
-	} */
 }
 
 func parseLogLine(text string) (*LogLine, error) {
