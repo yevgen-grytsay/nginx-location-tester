@@ -22,45 +22,47 @@ func main() {
 	var logChannel chan WsMessage = make(chan WsMessage)
 
 	go func() {
+		// for line := range t.Lines {
+		// 	logChannel <- WsMessage{Text: line.Text}
+		// }
+		var logSequenceMap = make(map[string]LogSequence)
+		// var lastLogLine *LogLine
+
+		// Print the text of each received line
 		for line := range t.Lines {
-			logChannel <- WsMessage{Text: line.Text}
+			// fmt.Println(line.Text)
+
+			parsedLogLine, error := parseLogLine(line.Text)
+			if error != nil {
+				// fmt.Printf("ERROR: %s\n", error)
+				continue
+			}
+
+			// lastLogLine = parsedLogLine
+			fmt.Printf("%#v\n", parsedLogLine)
+
+			item, ok := logSequenceMap[parsedLogLine.hash()]
+			if !ok {
+				item = LogSequence{PidAndTid: parsedLogLine.PidAndTid, RequestId: parsedLogLine.RequestId}
+			}
+			item.push(parsedLogLine)
+			/* if item.isComplete() {
+				fmt.Printf("Sequence completed %s\n", item.PidAndTid)
+				fmt.Printf("%#v", item)
+
+				os.Exit(0)
+			} */
+			logSequenceMap[parsedLogLine.hash()] = item
+
+			logChannel <- WsMessage{Text: parsedLogLine.Message}
 		}
 	}()
 
 	startWsServer(logChannel)
-	// var logSequenceMap = make(map[string]LogSequence)
-	// var lastLogLine *LogLine
 
-	// // Print the text of each received line
-	// for line := range t.Lines {
-	// 	// fmt.Println(line.Text)
-
-	// 	parsedLogLine, error := parseLogLine(line.Text)
-	// 	if error != nil {
-	// 		// fmt.Printf("ERROR: %s\n", error)
-	// 		continue
-	// 	}
-
-	// 	lastLogLine = parsedLogLine
-	// 	fmt.Printf("%#v\n", parsedLogLine)
-
-	// 	item, ok := logSequenceMap[lastLogLine.hash()]
-	// 	if !ok {
-	// 		item = LogSequence{PidAndTid: parsedLogLine.PidAndTid, RequestId: parsedLogLine.RequestId}
-	// 	}
-	// 	item.push(parsedLogLine)
-	// 	/* if item.isComplete() {
-	// 		fmt.Printf("Sequence completed %s\n", item.PidAndTid)
-	// 		fmt.Printf("%#v", item)
-
-	// 		os.Exit(0)
-	// 	} */
-	// 	logSequenceMap[lastLogLine.hash()] = item
-	// }
-
-	// for key, value := range logSequenceMap {
-	// 	fmt.Println("Key:", key, "Hash:", value.PidAndTid, "_", value.RequestId, "IsComplete:", fmt.Sprintf("%#v", value.isComplete()))
-	// }
+	/* for key, value := range logSequenceMap {
+		fmt.Println("Key:", key, "Hash:", value.PidAndTid, "_", value.RequestId, "IsComplete:", fmt.Sprintf("%#v", value.isComplete()))
+	} */
 }
 
 type LogLevel string
