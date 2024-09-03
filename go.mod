@@ -2,7 +2,10 @@ module github.com/yevgen-grytsay/go-nginx-tester
 
 go 1.22.0
 
-require github.com/nxadm/tail v1.4.11
+require (
+	github.com/gorilla/websocket v1.5.3
+	github.com/nxadm/tail v1.4.11
+)
 
 require (
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
