@@ -92,6 +92,15 @@ var homeTemplate = template.Must(template.New("").Parse(`
 <html>
 <head>
 <meta charset="utf-8">
+<style>
+	#output div {
+		border: 1px solid #dedede;
+		border-radius: 5px;
+		margin: 10px 0;
+		padding: 5px;
+		font-family: monospace;
+	}
+</style>
 <script>  
 window.addEventListener("load", function(evt) {
 
