@@ -71,7 +71,17 @@ func echo(w http.ResponseWriter, r *http.Request) {
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
-	homeTemplate.Execute(w, "ws://"+r.Host+"/echo")
+	fileList := CollectRelativeFilePaths("/usr/share/nginx/my-vue-pwa/")
+	data := struct {
+		WsUrl    string
+		FileList []string
+		NginxUrl string
+	}{
+		WsUrl:    "ws://" + r.Host + "/echo",
+		FileList: fileList,
+		NginxUrl: "http://localhost",
+	}
+	homeTemplate.Execute(w, data)
 }
 
 type WsMessage struct {
@@ -83,6 +93,9 @@ func startWsServer(c chan WsMessage) {
 	responder := Responder{input: c, upgrader: upgrader}
 	http.HandleFunc("/echo", responder.echo)
 
+	fs := http.FileServer(http.Dir("./public/assets"))
+	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
+
 	http.HandleFunc("/", home)
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }
@@ -92,69 +105,8 @@ var homeTemplate = template.Must(template.New("").Parse(`
 <html>
 <head>
 <meta charset="utf-8">
-<style>
-	#output div {
-		border: 1px solid #dedede;
-		border-radius: 5px;
-		margin: 10px 0;
-		padding: 5px;
-		font-family: monospace;
-	}
-</style>
-<script>  
-window.addEventListener("load", function(evt) {
-
-    var output = document.getElementById("output");
-    var input = document.getElementById("input");
-    var ws;
-
-    var print = function(message) {
-        var d = document.createElement("div");
-        d.innerHTML = message.replaceAll(/\n+/g, "\n").replaceAll("\n", "<br>");
-        output.appendChild(d);
-        output.scroll(0, output.scrollHeight);
-    };
-
-    document.getElementById("open").onclick = function(evt) {
-        if (ws) {
-            return false;
-        }
-        ws = new WebSocket("{{.}}");
-        ws.onopen = function(evt) {
-            print("OPEN");
-        }
-        ws.onclose = function(evt) {
-            print("CLOSE");
-            ws = null;
-        }
-        ws.onmessage = function(evt) {
-            print("RESPONSE: " + evt.data);
-        }
-        ws.onerror = function(evt) {
-            print("ERROR: " + evt.data);
-        }
-        return false;
-    };
-
-    document.getElementById("send").onclick = function(evt) {
-        if (!ws) {
-            return false;
-        }
-        print("SEND: " + input.value);
-        ws.send(input.value);
-        return false;
-    };
-
-    document.getElementById("close").onclick = function(evt) {
-        if (!ws) {
-            return false;
-        }
-        ws.close();
-        return false;
-    };
-
-});
-</script>
+<link href="/assets/styles.css" rel="stylesheet" />
+<script type="text/javascript" src="/assets/app.js"></script>
 </head>
 <body>
 <table>
@@ -169,9 +121,15 @@ You can change the message and send multiple times.
 <p><input id="input" type="text" value="Hello world!">
 <button id="send">Send</button>
 </form>
+<ul>
+	{{range .FileList}}<li><button data-asset-file="{{.}}">GET</button> {{.}}</li>{{end}}
+<ul>
 </td><td valign="top" width="50%">
 <div id="output" style="max-height: 70vh;overflow-y: scroll;"></div>
 </td></tr></table>
+<script>
+	initApp({wsUrl: "{{.WsUrl}}", nginxUrl: "{{.NginxUrl}}"})
+</script>
 </body>
 </html>
 `))
