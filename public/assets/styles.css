@@ -1,0 +1,8 @@
+#output div {
+  border: 1px solid #dedede;
+  border-radius: 5px;
+  margin: 10px 0;
+  padding: 5px;
+  font-family: monospace;
+}
+
