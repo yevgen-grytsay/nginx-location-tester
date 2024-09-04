@@ -88,6 +88,7 @@ You can change the message and send multiple times.
 </form>
 <ul>
 	{{range .FileList}}<li><button data-asset-file="{{.}}">GET</button> {{.}}</li>{{end}}
+	<li class="custom-url"><button>GET</button> <input type="text"></li>
 <ul>
 </td><td valign="top" width="50%">
 <div id="output" style="max-height: 70vh;overflow-y: scroll;"></div>

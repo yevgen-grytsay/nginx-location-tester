@@ -49,7 +49,9 @@ func main() {
 
 		ByPrefix{Prefix: "http script var:"},
 		ByPrefix{Prefix: "trying to use file:"},
+		ByPrefix{Prefix: "trying to use dir:"},
 		ByPrefix{Prefix: "http filename:"},
+		ByPrefix{Prefix: "http finalize request:"},
 	}}
 
 	var requestCounter int
@@ -149,7 +151,7 @@ func (s *LogSequence) push(line *LogLine) {
 		s.hasStartLine = true
 	}
 
-	if strings.HasPrefix(line.Message, "http filename:") {
+	if strings.HasPrefix(line.Message, "http filename:") || strings.HasPrefix(line.Message, "http finalize request:") {
 		s.hasEndLine = true
 	}
 }

@@ -1,0 +1,118 @@
+2024/09/05 02:15:18 [debug] 98858#98858: timer delta: 1
+2024/09/05 02:15:18 [debug] 98858#98858: worker cycle
+2024/09/05 02:15:18 [debug] 98858#98858: epoll timer: -1
+2024/09/05 02:16:39 [debug] 98858#98858: epoll: fd:6 ev:0001 d:00007845C96A6010
+2024/09/05 02:16:39 [debug] 98858#98858: accept on 0.0.0.0:80, ready: 0
+2024/09/05 02:16:39 [debug] 98858#98858: posix_memalign: 00005A63FAE66850:512 @16
+2024/09/05 02:16:39 [debug] 98858#98858: *69 accept: 127.0.0.1:54316 fd:4
+2024/09/05 02:16:39 [debug] 98858#98858: *69 event timer add: 4: 60000:73572475
+2024/09/05 02:16:39 [debug] 98858#98858: *69 reusable connection: 1
+2024/09/05 02:16:39 [debug] 98858#98858: *69 epoll add event: fd:4 op:1 ev:80002001
+2024/09/05 02:16:39 [debug] 98858#98858: timer delta: 81056
+2024/09/05 02:16:39 [debug] 98858#98858: worker cycle
+2024/09/05 02:16:39 [debug] 98858#98858: epoll timer: 60000
+2024/09/05 02:16:39 [debug] 98858#98858: epoll: fd:4 ev:0001 d:00007845C96A6201
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http wait request handler
+2024/09/05 02:16:39 [debug] 98858#98858: *69 malloc: 00005A63FAE68850:1024
+2024/09/05 02:16:39 [debug] 98858#98858: *69 recv: eof:0, avail:-1
+2024/09/05 02:16:39 [debug] 98858#98858: *69 recv: fd:4 526 of 1024
+2024/09/05 02:16:39 [debug] 98858#98858: *69 reusable connection: 0
+2024/09/05 02:16:39 [debug] 98858#98858: *69 posix_memalign: 00005A63FAE789F0:4096 @16
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http process request line
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http request line: "GET /test.html HTTP/1.1"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http uri: "/test.html"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http args: ""
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http exten: "html"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 posix_memalign: 00005A63FAE6F310:4096 @16
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http process request header line
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http header: "Host: localhost"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http header: "Connection: keep-alive"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http header: "Pragma: no-cache"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http header: "Cache-Control: no-cache"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http header: "sec-ch-ua: "Not;A=Brand";v="24", "Chromium";v="128""
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http header: "sec-ch-ua-mobile: ?0"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http header: "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http header: "sec-ch-ua-platform: "Linux""
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http header: "Accept: */*"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http header: "Sec-Fetch-Site: same-site"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http header: "Sec-Fetch-Mode: no-cors"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http header: "Sec-Fetch-Dest: empty"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http header: "Referer: http://localhost:8080/"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http header: "Accept-Encoding: gzip, deflate, br, zstd"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http header: "Accept-Language: en-US,en;q=0.9"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http header done
+2024/09/05 02:16:39 [debug] 98858#98858: *69 event timer del: 4: 73572475
+2024/09/05 02:16:39 [debug] 98858#98858: *69 generic phase: 0
+2024/09/05 02:16:39 [debug] 98858#98858: *69 rewrite phase: 1
+2024/09/05 02:16:39 [debug] 98858#98858: *69 test location: "/"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 test location: "workbox-"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 test location: "assets/"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 test location: ~ "^/(index\.html|registerSW\.js|manifest\.webmanifest|sw\.js)$"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 using configuration "/"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http cl:-1 max:1048576
+2024/09/05 02:16:39 [debug] 98858#98858: *69 rewrite phase: 3
+2024/09/05 02:16:39 [debug] 98858#98858: *69 post rewrite phase: 4
+2024/09/05 02:16:39 [debug] 98858#98858: *69 generic phase: 5
+2024/09/05 02:16:39 [debug] 98858#98858: *69 generic phase: 6
+2024/09/05 02:16:39 [debug] 98858#98858: *69 generic phase: 7
+2024/09/05 02:16:39 [debug] 98858#98858: *69 access phase: 8
+2024/09/05 02:16:39 [debug] 98858#98858: *69 access phase: 9
+2024/09/05 02:16:39 [debug] 98858#98858: *69 access phase: 10
+2024/09/05 02:16:39 [debug] 98858#98858: *69 post access phase: 11
+2024/09/05 02:16:39 [debug] 98858#98858: *69 generic phase: 12
+2024/09/05 02:16:39 [debug] 98858#98858: *69 try files handler
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http script var: "/test.html"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 trying to use file: "/test.html" "/usr/share/nginx/my-vue-pwa/test.html"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http script var: "/test.html"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 trying to use dir: "/test.html" "/usr/share/nginx/my-vue-pwa/test.html"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 trying to use file: "=404" "/usr/share/nginx/my-vue-pwa=404"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http finalize request: 404, "/test.html?" a:1, c:1
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http special response: 404, "/test.html?"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http set discard body
+2024/09/05 02:16:39 [debug] 98858#98858: *69 HTTP/1.1 404 Not Found
+Server: nginx/1.26.2
+Date: Wed, 04 Sep 2024 23:16:39 GMT
+Content-Type: text/html
+Content-Length: 555
+Connection: keep-alive
+
+2024/09/05 02:16:39 [debug] 98858#98858: *69 write new buf t:1 f:0 00005A63FAE798F0, pos 00005A63FAE798F0, size: 155 file: 0, size: 0
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http write filter: l:0 f:0 s:155
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http output filter "/test.html?"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http copy filter: "/test.html?"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http postpone filter "/test.html?" 00005A63FAE799B0
+2024/09/05 02:16:39 [debug] 98858#98858: *69 write old buf t:1 f:0 00005A63FAE798F0, pos 00005A63FAE798F0, size: 155 file: 0, size: 0
+2024/09/05 02:16:39 [debug] 98858#98858: *69 write new buf t:0 f:0 0000000000000000, pos 00005A63FA07F0A0, size: 100 file: 0, size: 0
+2024/09/05 02:16:39 [debug] 98858#98858: *69 write new buf t:0 f:0 0000000000000000, pos 00005A63FA07F7A0, size: 53 file: 0, size: 0
+2024/09/05 02:16:39 [debug] 98858#98858: *69 write new buf t:0 f:0 0000000000000000, pos 00005A63FA07F580, size: 402 file: 0, size: 0
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http write filter: l:1 f:0 s:710
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http write filter limit 2097152
+2024/09/05 02:16:39 [debug] 98858#98858: *69 writev: 710 of 710
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http write filter 0000000000000000
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http copy filter: 0 "/test.html?"
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http finalize request: 0, "/test.html?" a:1, c:1
+2024/09/05 02:16:39 [debug] 98858#98858: *69 set http keepalive handler
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http close request
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http log handler
+2024/09/05 02:16:39 [debug] 98858#98858: *69 free: 00005A63FAE789F0, unused: 0
+2024/09/05 02:16:39 [debug] 98858#98858: *69 free: 00005A63FAE6F310, unused: 2300
+2024/09/05 02:16:39 [debug] 98858#98858: *69 free: 00005A63FAE68850
+2024/09/05 02:16:39 [debug] 98858#98858: *69 hc free: 0000000000000000
+2024/09/05 02:16:39 [debug] 98858#98858: *69 hc busy: 0000000000000000 0
+2024/09/05 02:16:39 [debug] 98858#98858: *69 tcp_nodelay
+2024/09/05 02:16:39 [debug] 98858#98858: *69 reusable connection: 1
+2024/09/05 02:16:39 [debug] 98858#98858: *69 event timer add: 4: 65000:73577475
+2024/09/05 02:16:39 [debug] 98858#98858: timer delta: 0
+2024/09/05 02:16:39 [debug] 98858#98858: worker cycle
+2024/09/05 02:16:39 [debug] 98858#98858: epoll timer: 65000
+2024/09/05 02:16:39 [debug] 98858#98858: epoll: fd:4 ev:2001 d:00007845C96A6201
+2024/09/05 02:16:39 [debug] 98858#98858: *69 http keepalive handler
+2024/09/05 02:16:39 [debug] 98858#98858: *69 malloc: 00005A63FAE68850:1024
+2024/09/05 02:16:39 [debug] 98858#98858: *69 recv: eof:1, avail:-1
+2024/09/05 02:16:39 [debug] 98858#98858: *69 recv: fd:4 0 of 1024
+2024/09/05 02:16:39 [info] 98858#98858: *69 client 127.0.0.1 closed keepalive connection
+2024/09/05 02:16:39 [debug] 98858#98858: *69 close http connection: 4
+2024/09/05 02:16:39 [debug] 98858#98858: *69 event timer del: 4: 73577475
+2024/09/05 02:16:39 [debug] 98858#98858: *69 reusable connection: 0
+2024/09/05 02:16:39 [debug] 98858#98858: *69 free: 00005A63FAE68850
+2024/09/05 02:16:39 [debug] 98858#98858: *69 free: 00005A63FAE66850, unused: 136
