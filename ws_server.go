@@ -71,7 +71,17 @@ func echo(w http.ResponseWriter, r *http.Request) {
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
-	homeTemplate.Execute(w, "ws://"+r.Host+"/echo")
+	fileList := CollectRelativeFilePaths("/usr/share/nginx/my-vue-pwa/")
+	data := struct {
+		WsUrl    string
+		FileList []string
+		NginxUrl string
+	}{
+		WsUrl:    "ws://" + r.Host + "/echo",
+		FileList: fileList,
+		NginxUrl: "http://localhost",
+	}
+	homeTemplate.Execute(w, data)
 }
 
 type WsMessage struct {
@@ -111,11 +121,14 @@ You can change the message and send multiple times.
 <p><input id="input" type="text" value="Hello world!">
 <button id="send">Send</button>
 </form>
+<ul>
+	{{range .FileList}}<li><button data-asset-file="{{.}}">GET</button> {{.}}</li>{{end}}
+<ul>
 </td><td valign="top" width="50%">
 <div id="output" style="max-height: 70vh;overflow-y: scroll;"></div>
 </td></tr></table>
 <script>
-	initApp({wsUrl: "{{.}}"})
+	initApp({wsUrl: "{{.WsUrl}}", nginxUrl: "{{.NginxUrl}}"})
 </script>
 </body>
 </html>

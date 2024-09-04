@@ -1,4 +1,4 @@
-function initApp({ wsUrl }) {
+function initApp({ wsUrl, nginxUrl }) {
   window.addEventListener("load", function (evt) {
     var output = document.getElementById("output");
     var input = document.getElementById("input");
@@ -13,9 +13,19 @@ function initApp({ wsUrl }) {
 
     const printResponse = function (body) {
       const data = JSON.parse(body);
-      const prettyJson = JSON.stringify(data, null, "  ");
+      const ls = new LogSequence(data);
+      let textContent = "";
+
+      if (typeof data === "object") {
+        textContent = ls.getSimpleLines().join("<br>");
+      } else {
+        textContent = JSON.stringify(data, null, "  ");
+      }
+
+      // const prettyJson = JSON.stringify(data, null, "  ");
       var d = document.createElement("div");
-      d.innerHTML = "<pre>" + prettyJson + "</pre>";
+      // d.innerHTML = "<pre>" + prettyJson + "</pre>";
+      d.innerHTML = "<pre>" + textContent + "</pre>";
       output.appendChild(d);
       output.scroll(0, output.scrollHeight);
     };
@@ -57,5 +67,38 @@ function initApp({ wsUrl }) {
       ws.close();
       return false;
     };
+
+    document.querySelectorAll("[data-asset-file]").forEach((el) => {
+      el.addEventListener("click", (evt) => {
+        const fileName = evt.target.dataset.assetFile;
+        const url = new URL(fileName, nginxUrl);
+        fetch(url, { mode: "no-cors" });
+      });
+    });
   });
+
+  /**
+   * @typedef {object} LogLine
+   * @property {string} Message
+   */
+  /**
+   * @typedef {Object} LogSequenceResponse
+   * @property {LogLine[]} Lines
+   * @property {object} RequestFullId
+   */
+
+  class LogSequence {
+    /**
+     * @param {LogSequenceResponse} data
+     */
+    constructor(data) {
+      this.data = data;
+    }
+
+    getSimpleLines() {
+      return this.data.Lines.map((line) => {
+        return line.Message;
+      });
+    }
+  }
 }

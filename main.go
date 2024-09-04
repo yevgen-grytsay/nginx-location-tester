@@ -35,6 +35,7 @@ func main() {
 		ByPrefix{Prefix: "http filename:"},
 	}}
 
+	var requestCounter int
 	go func() {
 		// for line := range t.Lines {
 		// 	logChannel <- WsMessage{Text: line.Text}
@@ -61,6 +62,7 @@ func main() {
 			if !ok {
 				item = LogSequence{RequestFullId: parsedLogLine.RequestFullId}
 				isNewRequest = true
+				requestCounter += 1
 			}
 			item.push(parsedLogLine)
 			/* if item.isComplete() {
@@ -80,7 +82,7 @@ func main() {
 			// logChannel <- WsMessage{Text: parsedLogLine.Message}
 
 			if isNewRequest {
-				logChannel <- WsMessage{Text: fmt.Sprintf("\"Total requests: %d\"", len(logSequenceMap))}
+				logChannel <- WsMessage{Text: fmt.Sprintf("\"Total requests: %d\"", requestCounter)}
 			}
 		}
 	}()
