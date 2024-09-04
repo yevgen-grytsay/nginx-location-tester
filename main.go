@@ -16,6 +16,7 @@ import (
 var nginxErrorLog = GetEnvOrDefault("APP_NGINX_ERROR_LOG", "/var/log/nginx/error.log")
 var addr = ":8080"
 var nginxPortOnHost = GetEnvOrDefault("APP_NGINX_PORT_ON_HOST", "80")
+var webPath = GetEnvOrDefault("APP_WEB_PATH", "/usr/share/nginx/my-vue-pwa")
 
 func GetEnvOrDefault(key string, fallback string) string {
 	if value, ok := os.LookupEnv(key); ok {
@@ -26,7 +27,7 @@ func GetEnvOrDefault(key string, fallback string) string {
 }
 
 func main() {
-	log.Println("APP_NGINX_ERROR_LOG: ", nginxErrorLog, "; APP_NGINX_PORT_ON_HOST: ", nginxPortOnHost)
+	log.Println("APP_NGINX_ERROR_LOG: ", nginxErrorLog, "; APP_NGINX_PORT_ON_HOST: ", nginxPortOnHost, "; APP_WEB_PATH: ", webPath)
 	// Create a tail
 	t, err := tail.TailFile(
 		nginxErrorLog,
@@ -104,7 +105,7 @@ func main() {
 	}()
 
 	nginxPortOnHostInt, _ := strconv.Atoi(nginxPortOnHost)
-	startWsServer(logChannel, addr, nginxPortOnHostInt)
+	startWsServer(logChannel, addr, nginxPortOnHostInt, webPath)
 
 	/* for key, value := range logSequenceMap {
 		fmt.Println("Key:", key, "Hash:", value.PidAndTid, "_", value.RequestId, "IsComplete:", fmt.Sprintf("%#v", value.isComplete()))

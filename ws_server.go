@@ -16,6 +16,7 @@ type Responder struct {
 	upgrader        websocket.Upgrader
 	input           chan WsMessage
 	nginxPortOnHost int
+	webFilesPath    string
 }
 
 func (rsp Responder) echo(w http.ResponseWriter, r *http.Request) {
@@ -35,7 +36,7 @@ func (rsp Responder) echo(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rsp Responder) home(w http.ResponseWriter, r *http.Request) {
-	fileList := CollectRelativeFilePaths("/app/web")
+	fileList := CollectRelativeFilePaths(rsp.webFilesPath)
 	data := struct {
 		WsUrl    string
 		FileList []string
@@ -52,9 +53,9 @@ type WsMessage struct {
 	Text string
 }
 
-func startWsServer(c chan WsMessage, addr string, nginxPortOnHost int) {
+func startWsServer(c chan WsMessage, addr string, nginxPortOnHost int, webPath string) {
 	// http.HandleFunc("/echo", echo)
-	responder := Responder{input: c, upgrader: upgrader, nginxPortOnHost: nginxPortOnHost}
+	responder := Responder{input: c, upgrader: upgrader, nginxPortOnHost: nginxPortOnHost, webFilesPath: webPath}
 	http.HandleFunc("/echo", responder.echo)
 
 	fs := http.FileServer(http.Dir("./public/assets"))

@@ -17,6 +17,7 @@ services:
     environment:
       - APP_NGINX_ERROR_LOG=/var/log/nginx/error_debug.log
       - APP_NGINX_PORT_ON_HOST=8081
+      - APP_WEB_PATH=/app/web
     volumes:
       - ./docker/nginx/share/tester:/app/web
       - nginx-log-volume:/var/log/nginx
