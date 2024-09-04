@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -12,8 +13,9 @@ import (
 var upgrader = websocket.Upgrader{} // use default options
 
 type Responder struct {
-	upgrader websocket.Upgrader
-	input    chan WsMessage
+	upgrader        websocket.Upgrader
+	input           chan WsMessage
+	nginxPortOnHost int
 }
 
 func (rsp Responder) echo(w http.ResponseWriter, r *http.Request) {
@@ -30,45 +32,10 @@ func (rsp Responder) echo(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 	}
-	/* for {
-		mt, message, err := c.ReadMessage()
-		if err != nil {
-			log.Println("read:", err)
-			break
-		}
-		log.Printf("recv: %s", message)
-		err = c.WriteMessage(mt, message)
-		if err != nil {
-			log.Println("write:", err)
-			break
-		}
-	} */
 }
 
-/* func echo(w http.ResponseWriter, r *http.Request) {
-	c, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		log.Print("upgrade:", err)
-		return
-	}
-	defer c.Close()
-	for {
-		mt, message, err := c.ReadMessage()
-		if err != nil {
-			log.Println("read:", err)
-			break
-		}
-		log.Printf("recv: %s", message)
-		err = c.WriteMessage(mt, message)
-		if err != nil {
-			log.Println("write:", err)
-			break
-		}
-	}
-} */
-
-func home(w http.ResponseWriter, r *http.Request) {
-	fileList := CollectRelativeFilePaths("/usr/share/nginx/my-vue-pwa/")
+func (rsp Responder) home(w http.ResponseWriter, r *http.Request) {
+	fileList := CollectRelativeFilePaths("/app/web")
 	data := struct {
 		WsUrl    string
 		FileList []string
@@ -76,7 +43,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}{
 		WsUrl:    "ws://" + r.Host + "/echo",
 		FileList: fileList,
-		NginxUrl: "http://localhost",
+		NginxUrl: fmt.Sprintf("http://localhost:%d", rsp.nginxPortOnHost),
 	}
 	homeTemplate.Execute(w, data)
 }
@@ -85,15 +52,15 @@ type WsMessage struct {
 	Text string
 }
 
-func startWsServer(c chan WsMessage, addr string) {
+func startWsServer(c chan WsMessage, addr string, nginxPortOnHost int) {
 	// http.HandleFunc("/echo", echo)
-	responder := Responder{input: c, upgrader: upgrader}
+	responder := Responder{input: c, upgrader: upgrader, nginxPortOnHost: nginxPortOnHost}
 	http.HandleFunc("/echo", responder.echo)
 
 	fs := http.FileServer(http.Dir("./public/assets"))
 	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
-	http.HandleFunc("/", home)
+	http.HandleFunc("/", responder.home)
 	log.Fatal(http.ListenAndServe(addr, nil))
 }
 
