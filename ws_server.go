@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"net/http"
 
@@ -9,8 +8,6 @@ import (
 
 	"github.com/gorilla/websocket"
 )
-
-var addr = flag.String("addr", "localhost:8080", "http service address")
 
 var upgrader = websocket.Upgrader{} // use default options
 
@@ -48,7 +45,7 @@ func (rsp Responder) echo(w http.ResponseWriter, r *http.Request) {
 	} */
 }
 
-func echo(w http.ResponseWriter, r *http.Request) {
+/* func echo(w http.ResponseWriter, r *http.Request) {
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Print("upgrade:", err)
@@ -68,7 +65,7 @@ func echo(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 	}
-}
+} */
 
 func home(w http.ResponseWriter, r *http.Request) {
 	fileList := CollectRelativeFilePaths("/usr/share/nginx/my-vue-pwa/")
@@ -88,7 +85,7 @@ type WsMessage struct {
 	Text string
 }
 
-func startWsServer(c chan WsMessage) {
+func startWsServer(c chan WsMessage, addr string) {
 	// http.HandleFunc("/echo", echo)
 	responder := Responder{input: c, upgrader: upgrader}
 	http.HandleFunc("/echo", responder.echo)
@@ -97,7 +94,7 @@ func startWsServer(c chan WsMessage) {
 	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
 	http.HandleFunc("/", home)
-	log.Fatal(http.ListenAndServe(*addr, nil))
+	log.Fatal(http.ListenAndServe(addr, nil))
 }
 
 var homeTemplate = template.Must(template.New("").Parse(`

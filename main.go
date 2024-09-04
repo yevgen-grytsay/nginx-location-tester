@@ -4,16 +4,28 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
 	"regexp"
 	"strings"
 
 	"github.com/nxadm/tail"
 )
 
+var nginxErrorLog = GetEnvOrDefault("APP_NGINX_ERROR_LOG", "/var/log/nginx/error.log")
+var addr = GetEnvOrDefault("APP_ADDR", "localhost:8080")
+
+func GetEnvOrDefault(key string, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+
+	return fallback
+}
+
 func main() {
 	// Create a tail
 	t, err := tail.TailFile(
-		"/var/log/nginx/error.log",
+		nginxErrorLog,
 		tail.Config{Follow: true, ReOpen: true, CompleteLines: true, Location: &tail.SeekInfo{Whence: io.SeekEnd}},
 		// tail.Config{Follow: false},
 	)
@@ -87,7 +99,7 @@ func main() {
 		}
 	}()
 
-	startWsServer(logChannel)
+	startWsServer(logChannel, addr)
 
 	/* for key, value := range logSequenceMap {
 		fmt.Println("Key:", key, "Hash:", value.PidAndTid, "_", value.RequestId, "IsComplete:", fmt.Sprintf("%#v", value.isComplete()))
