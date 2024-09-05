@@ -5,8 +5,7 @@ services:
       - "8081:80"
     volumes:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      # - ./docker/nginx/share/tester:/usr/share/nginx/tester
-      - ./docker/nginx/share/tester:/usr/share/nginx/tester
+      - ./docker/nginx/share/web_files:/usr/share/nginx/web_files
       - nginx-log-volume:/var/log/nginx
     command: [nginx-debug, "-g", "daemon off;"]
   tester:
@@ -18,8 +17,10 @@ services:
       - APP_NGINX_ERROR_LOG=/var/log/nginx/error_debug.log
       - APP_NGINX_PORT_ON_HOST=8081
       - APP_WEB_PATH=/app/web
+      - APP_NGINX_HOST=nginx
+      - APP_FETCH_VIA_PROXY=true
     volumes:
-      - ./docker/nginx/share/tester:/app/web
+      - ./docker/nginx/share/web_files:/app/web
       - nginx-log-volume:/var/log/nginx
 
 volumes:

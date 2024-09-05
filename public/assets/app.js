@@ -1,4 +1,4 @@
-function initApp({ wsUrl, nginxUrl }) {
+function initApp({ wsUrl, nginxUrl, fetchViaProxy }) {
   window.addEventListener("load", function (evt) {
     var output = document.getElementById("output");
     var input = document.getElementById("input");
@@ -71,19 +71,31 @@ function initApp({ wsUrl, nginxUrl }) {
     document.querySelectorAll("[data-asset-file]").forEach((el) => {
       el.addEventListener("click", (evt) => {
         const fileName = evt.target.dataset.assetFile;
-        const url = new URL(fileName, nginxUrl);
-        fetch(url, { mode: "no-cors" });
+
+        if (fetchViaProxy) {
+          const url = new URL("/fetch", document.baseURI);
+          url.searchParams.set("file", fileName);
+          fetch(url);
+        } else {
+          const url = new URL(fileName, nginxUrl);
+          fetch(url, { mode: "no-cors" });
+        }
       });
     });
 
     document
       .querySelector(".custom-url button")
       .addEventListener("click", (evt) => {
-        var url = new URL(
-          document.querySelector(".custom-url input").value,
-          nginxUrl
-        );
-        fetch(url, { mode: "no-cors" });
+        const fileName = document.querySelector(".custom-url input").value;
+
+        if (fetchViaProxy) {
+          const url = new URL("/fetch", document.baseURI);
+          url.searchParams.set("file", fileName);
+          fetch(url);
+        } else {
+          const url = new URL(fileName, nginxUrl);
+          fetch(url, { mode: "no-cors" });
+        }
       });
   });
 
