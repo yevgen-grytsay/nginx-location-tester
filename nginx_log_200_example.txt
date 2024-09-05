@@ -1,0 +1,118 @@
+2024/09/05 02:16:39 [debug] 98858#98858: timer delta: 2
+2024/09/05 02:16:39 [debug] 98858#98858: worker cycle
+2024/09/05 02:16:39 [debug] 98858#98858: epoll timer: -1
+2024/09/05 02:18:08 [debug] 98858#98858: epoll: fd:6 ev:0001 d:00007845C96A6010
+2024/09/05 02:18:08 [debug] 98858#98858: accept on 0.0.0.0:80, ready: 0
+2024/09/05 02:18:08 [debug] 98858#98858: posix_memalign: 00005A63FAE66850:512 @16
+2024/09/05 02:18:08 [debug] 98858#98858: *70 accept: 127.0.0.1:38502 fd:4
+2024/09/05 02:18:08 [debug] 98858#98858: *70 event timer add: 4: 60000:73661637
+2024/09/05 02:18:08 [debug] 98858#98858: *70 reusable connection: 1
+2024/09/05 02:18:08 [debug] 98858#98858: *70 epoll add event: fd:4 op:1 ev:80002001
+2024/09/05 02:18:08 [debug] 98858#98858: timer delta: 89160
+2024/09/05 02:18:08 [debug] 98858#98858: worker cycle
+2024/09/05 02:18:08 [debug] 98858#98858: epoll timer: 60000
+2024/09/05 02:18:08 [debug] 98858#98858: epoll: fd:4 ev:0001 d:00007845C96A6200
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http wait request handler
+2024/09/05 02:18:08 [debug] 98858#98858: *70 malloc: 00005A63FAE68850:1024
+2024/09/05 02:18:08 [debug] 98858#98858: *70 recv: eof:0, avail:-1
+2024/09/05 02:18:08 [debug] 98858#98858: *70 recv: fd:4 542 of 1024
+2024/09/05 02:18:08 [debug] 98858#98858: *70 reusable connection: 0
+2024/09/05 02:18:08 [debug] 98858#98858: *70 posix_memalign: 00005A63FAE789F0:4096 @16
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http process request line
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http request line: "GET /assets/index-DNyFXbRi.css HTTP/1.1"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http uri: "/assets/index-DNyFXbRi.css"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http args: ""
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http exten: "css"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 posix_memalign: 00005A63FAE6F310:4096 @16
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http process request header line
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http header: "Host: localhost"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http header: "Connection: keep-alive"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http header: "Pragma: no-cache"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http header: "Cache-Control: no-cache"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http header: "sec-ch-ua: "Not;A=Brand";v="24", "Chromium";v="128""
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http header: "sec-ch-ua-mobile: ?0"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http header: "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http header: "sec-ch-ua-platform: "Linux""
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http header: "Accept: */*"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http header: "Sec-Fetch-Site: same-site"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http header: "Sec-Fetch-Mode: no-cors"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http header: "Sec-Fetch-Dest: empty"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http header: "Referer: http://localhost:8080/"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http header: "Accept-Encoding: gzip, deflate, br, zstd"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http header: "Accept-Language: en-US,en;q=0.9"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http header done
+2024/09/05 02:18:08 [debug] 98858#98858: *70 event timer del: 4: 73661637
+2024/09/05 02:18:08 [debug] 98858#98858: *70 generic phase: 0
+2024/09/05 02:18:08 [debug] 98858#98858: *70 rewrite phase: 1
+2024/09/05 02:18:08 [debug] 98858#98858: *70 test location: "/"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 test location: "workbox-"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 test location: "assets/"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 using configuration "/assets/"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http cl:-1 max:1048576
+2024/09/05 02:18:08 [debug] 98858#98858: *70 rewrite phase: 3
+2024/09/05 02:18:08 [debug] 98858#98858: *70 post rewrite phase: 4
+2024/09/05 02:18:08 [debug] 98858#98858: *70 generic phase: 5
+2024/09/05 02:18:08 [debug] 98858#98858: *70 generic phase: 6
+2024/09/05 02:18:08 [debug] 98858#98858: *70 generic phase: 7
+2024/09/05 02:18:08 [debug] 98858#98858: *70 access phase: 8
+2024/09/05 02:18:08 [debug] 98858#98858: *70 access phase: 9
+2024/09/05 02:18:08 [debug] 98858#98858: *70 access phase: 10
+2024/09/05 02:18:08 [debug] 98858#98858: *70 post access phase: 11
+2024/09/05 02:18:08 [debug] 98858#98858: *70 generic phase: 12
+2024/09/05 02:18:08 [debug] 98858#98858: *70 try files handler
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http script var: "/assets/index-DNyFXbRi.css"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 trying to use file: "/assets/index-DNyFXbRi.css" "/usr/share/nginx/my-vue-pwa/assets/index-DNyFXbRi.css"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 try file uri: "/assets/index-DNyFXbRi.css"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 generic phase: 13
+2024/09/05 02:18:08 [debug] 98858#98858: *70 content phase: 14
+2024/09/05 02:18:08 [debug] 98858#98858: *70 content phase: 15
+2024/09/05 02:18:08 [debug] 98858#98858: *70 content phase: 16
+2024/09/05 02:18:08 [debug] 98858#98858: *70 content phase: 17
+2024/09/05 02:18:08 [debug] 98858#98858: *70 content phase: 18
+2024/09/05 02:18:08 [debug] 98858#98858: *70 content phase: 19
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http filename: "/usr/share/nginx/my-vue-pwa/assets/index-DNyFXbRi.css"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 add cleanup: 00005A63FAE798C8
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http static fd: 13
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http set discard body
+2024/09/05 02:18:08 [debug] 98858#98858: *70 HTTP/1.1 200 OK
+Server: nginx/1.26.2
+Date: Wed, 04 Sep 2024 23:18:08 GMT
+Content-Type: text/css
+Content-Length: 1272
+Last-Modified: Wed, 10 Jul 2024 13:20:57 GMT
+Connection: keep-alive
+ETag: "668e8ab9-4f8"
+Cache-Control: public, max-age=31536000, s-maxage=31536000, immutable
+Accept-Ranges: bytes
+
+2024/09/05 02:18:08 [debug] 98858#98858: *70 write new buf t:1 f:0 00005A63FAE6F878, pos 00005A63FAE6F878, size: 309 file: 0, size: 0
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http write filter: l:0 f:0 s:309
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http output filter "/assets/index-DNyFXbRi.css?"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http copy filter: "/assets/index-DNyFXbRi.css?"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http postpone filter "/assets/index-DNyFXbRi.css?" 00007FFE5F5D9180
+2024/09/05 02:18:08 [debug] 98858#98858: *70 write old buf t:1 f:0 00005A63FAE6F878, pos 00005A63FAE6F878, size: 309 file: 0, size: 0
+2024/09/05 02:18:08 [debug] 98858#98858: *70 write new buf t:0 f:1 0000000000000000, pos 0000000000000000, size: 0 file: 0, size: 1272
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http write filter: l:1 f:0 s:1581
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http write filter limit 2097152
+2024/09/05 02:18:08 [debug] 98858#98858: *70 writev: 309 of 309
+2024/09/05 02:18:08 [debug] 98858#98858: *70 sendfile: @0 1272
+2024/09/05 02:18:08 [debug] 98858#98858: *70 sendfile: 1272 of 1272 @0
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http write filter 0000000000000000
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http copy filter: 0 "/assets/index-DNyFXbRi.css?"
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http finalize request: 0, "/assets/index-DNyFXbRi.css?" a:1, c:1
+2024/09/05 02:18:08 [debug] 98858#98858: *70 set http keepalive handler
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http close request
+2024/09/05 02:18:08 [debug] 98858#98858: *70 http log handler
+2024/09/05 02:18:08 [debug] 98858#98858: *70 run cleanup: 00005A63FAE798C8
+2024/09/05 02:18:08 [debug] 98858#98858: *70 file cleanup: fd:13
+2024/09/05 02:18:08 [debug] 98858#98858: *70 free: 00005A63FAE789F0, unused: 8
+2024/09/05 02:18:08 [debug] 98858#98858: *70 free: 00005A63FAE6F310, unused: 1996
+2024/09/05 02:18:08 [debug] 98858#98858: *70 free: 00005A63FAE68850
+2024/09/05 02:18:08 [debug] 98858#98858: *70 hc free: 0000000000000000
+2024/09/05 02:18:08 [debug] 98858#98858: *70 hc busy: 0000000000000000 0
+2024/09/05 02:18:08 [debug] 98858#98858: *70 tcp_nodelay
+2024/09/05 02:18:08 [debug] 98858#98858: *70 reusable connection: 1
+2024/09/05 02:18:08 [debug] 98858#98858: *70 event timer add: 4: 65000:73666637
+2024/09/05 02:18:08 [debug] 98858#98858: timer delta: 0
+2024/09/05 02:18:08 [debug] 98858#98858: worker cycle
+2024/09/05 02:18:08 [debug] 98858#98858: epoll timer: 65000

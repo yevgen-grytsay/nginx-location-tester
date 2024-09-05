@@ -75,6 +75,16 @@ function initApp({ wsUrl, nginxUrl }) {
         fetch(url, { mode: "no-cors" });
       });
     });
+
+    document
+      .querySelector(".custom-url button")
+      .addEventListener("click", (evt) => {
+        var url = new URL(
+          document.querySelector(".custom-url input").value,
+          nginxUrl
+        );
+        fetch(url, { mode: "no-cors" });
+      });
   });
 
   /**

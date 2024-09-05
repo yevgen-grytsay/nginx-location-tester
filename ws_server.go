@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -12,8 +13,10 @@ import (
 var upgrader = websocket.Upgrader{} // use default options
 
 type Responder struct {
-	upgrader websocket.Upgrader
-	input    chan WsMessage
+	upgrader        websocket.Upgrader
+	input           chan WsMessage
+	nginxPortOnHost int
+	webFilesPath    string
 }
 
 func (rsp Responder) echo(w http.ResponseWriter, r *http.Request) {
@@ -30,45 +33,10 @@ func (rsp Responder) echo(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 	}
-	/* for {
-		mt, message, err := c.ReadMessage()
-		if err != nil {
-			log.Println("read:", err)
-			break
-		}
-		log.Printf("recv: %s", message)
-		err = c.WriteMessage(mt, message)
-		if err != nil {
-			log.Println("write:", err)
-			break
-		}
-	} */
 }
 
-/* func echo(w http.ResponseWriter, r *http.Request) {
-	c, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		log.Print("upgrade:", err)
-		return
-	}
-	defer c.Close()
-	for {
-		mt, message, err := c.ReadMessage()
-		if err != nil {
-			log.Println("read:", err)
-			break
-		}
-		log.Printf("recv: %s", message)
-		err = c.WriteMessage(mt, message)
-		if err != nil {
-			log.Println("write:", err)
-			break
-		}
-	}
-} */
-
-func home(w http.ResponseWriter, r *http.Request) {
-	fileList := CollectRelativeFilePaths("/usr/share/nginx/my-vue-pwa/")
+func (rsp Responder) home(w http.ResponseWriter, r *http.Request) {
+	fileList := CollectRelativeFilePaths(rsp.webFilesPath)
 	data := struct {
 		WsUrl    string
 		FileList []string
@@ -76,7 +44,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}{
 		WsUrl:    "ws://" + r.Host + "/echo",
 		FileList: fileList,
-		NginxUrl: "http://localhost",
+		NginxUrl: fmt.Sprintf("http://localhost:%d", rsp.nginxPortOnHost),
 	}
 	homeTemplate.Execute(w, data)
 }
@@ -85,15 +53,15 @@ type WsMessage struct {
 	Text string
 }
 
-func startWsServer(c chan WsMessage, addr string) {
+func startWsServer(c chan WsMessage, addr string, nginxPortOnHost int, webPath string) {
 	// http.HandleFunc("/echo", echo)
-	responder := Responder{input: c, upgrader: upgrader}
+	responder := Responder{input: c, upgrader: upgrader, nginxPortOnHost: nginxPortOnHost, webFilesPath: webPath}
 	http.HandleFunc("/echo", responder.echo)
 
 	fs := http.FileServer(http.Dir("./public/assets"))
 	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
-	http.HandleFunc("/", home)
+	http.HandleFunc("/", responder.home)
 	log.Fatal(http.ListenAndServe(addr, nil))
 }
 
@@ -120,6 +88,7 @@ You can change the message and send multiple times.
 </form>
 <ul>
 	{{range .FileList}}<li><button data-asset-file="{{.}}">GET</button> {{.}}</li>{{end}}
+	<li class="custom-url"><button>GET</button> <input type="text"></li>
 <ul>
 </td><td valign="top" width="50%">
 <div id="output" style="max-height: 70vh;overflow-y: scroll;"></div>
