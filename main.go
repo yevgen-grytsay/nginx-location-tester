@@ -174,7 +174,7 @@ func (s *LogSequence) push(line *LogLine) {
 		s.hasStartLine = true
 	}
 
-	if strings.HasPrefix(line.Message, "http filename:") || strings.HasPrefix(line.Message, "http finalize request:") {
+	if /* strings.HasPrefix(line.Message, "http filename:") || */ strings.HasPrefix(line.Message, "http finalize request:") {
 		s.hasEndLine = true
 	}
 }
