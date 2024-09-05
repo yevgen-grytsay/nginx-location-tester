@@ -18,6 +18,7 @@ var addr = ":8080"
 var nginxPortOnHost = GetEnvOrDefault("APP_NGINX_PORT_ON_HOST", "80")
 var webPath = GetEnvOrDefault("APP_WEB_PATH", "/usr/share/nginx/my-vue-pwa")
 var fetchViaProxy = GetEnvBool("APP_FETCH_VIA_PROXY", false)
+var nginxHost = GetEnvOrDefault("APP_NGINX_HOST", "localhost")
 
 func GetEnvOrDefault(key string, fallback string) string {
 	if value, ok := os.LookupEnv(key); ok {
@@ -46,6 +47,7 @@ func main() {
 		"# Starting Tester App",
 		"\n\tAPP_NGINX_ERROR_LOG: ", nginxErrorLog,
 		"\n\tAPP_NGINX_PORT_ON_HOST: ", nginxPortOnHost,
+		"\n\tAPP_NGINX_HOST: ", nginxHost,
 		"\n\tAPP_WEB_PATH: ", webPath,
 		"\n\tAPP_FETCH_VIA_PROXY: ", fetchViaProxy,
 	)
@@ -128,7 +130,7 @@ func main() {
 	}()
 
 	nginxPortOnHostInt, _ := strconv.Atoi(nginxPortOnHost)
-	startWsServer(logChannel, addr, nginxPortOnHostInt, webPath, fetchViaProxy)
+	startWsServer(logChannel, addr, nginxPortOnHostInt, webPath, fetchViaProxy, nginxHost)
 
 	/* for key, value := range logSequenceMap {
 		fmt.Println("Key:", key, "Hash:", value.PidAndTid, "_", value.RequestId, "IsComplete:", fmt.Sprintf("%#v", value.isComplete()))

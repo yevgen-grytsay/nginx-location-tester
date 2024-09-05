@@ -20,6 +20,7 @@ type Responder struct {
 	nginxPortOnHost int
 	webFilesPath    string
 	fetchViaProxy   bool
+	nginxHost       string
 }
 
 func (rsp Responder) echo(w http.ResponseWriter, r *http.Request) {
@@ -71,7 +72,7 @@ func (rsp Responder) home(w http.ResponseWriter, r *http.Request) {
 func (rsp Responder) fetch(w http.ResponseWriter, r *http.Request) {
 	file := r.URL.Query().Get("file")
 
-	requestURL, _ := url.JoinPath("http://localhost", file)
+	requestURL, _ := url.JoinPath("http://", rsp.nginxHost, file)
 	log.Printf("making http request: %s\n", requestURL)
 	_, err := http.Get(requestURL)
 	if err != nil {
@@ -83,9 +84,16 @@ type WsMessage struct {
 	Text string
 }
 
-func startWsServer(c chan WsMessage, addr string, nginxPortOnHost int, webPath string, fetchViaProxy bool) {
+func startWsServer(c chan WsMessage, addr string, nginxPortOnHost int, webPath string, fetchViaProxy bool, nginxHost string) {
 	// http.HandleFunc("/echo", echo)
-	responder := Responder{input: c, upgrader: upgrader, nginxPortOnHost: nginxPortOnHost, webFilesPath: webPath, fetchViaProxy: fetchViaProxy}
+	responder := Responder{
+		input:           c,
+		upgrader:        upgrader,
+		nginxPortOnHost: nginxPortOnHost,
+		webFilesPath:    webPath,
+		fetchViaProxy:   fetchViaProxy,
+		nginxHost:       nginxHost,
+	}
 	http.HandleFunc("/echo", responder.echo)
 
 	http.HandleFunc("/fetch", responder.fetch)
