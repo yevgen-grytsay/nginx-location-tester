@@ -34,6 +34,5 @@ COPY ./docker/supervisord/nginx.conf /etc/supervisor/conf.d/nginx.conf
 COPY ./docker/supervisord/tester.conf /etc/supervisor/conf.d/tester.conf
 
 EXPOSE 8080
-EXPOSE 80
 
 CMD ["/usr/bin/supervisord"]

@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 
 	"html/template"
 
@@ -17,6 +19,7 @@ type Responder struct {
 	input           chan WsMessage
 	nginxPortOnHost int
 	webFilesPath    string
+	fetchViaProxy   bool
 }
 
 func (rsp Responder) echo(w http.ResponseWriter, r *http.Request) {
@@ -36,27 +39,56 @@ func (rsp Responder) echo(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rsp Responder) home(w http.ResponseWriter, r *http.Request) {
+
+	jsonB, _ := json.Marshal(struct {
+		WsUrl         string `json:"wsUrl"`
+		NginxUrl      string `json:"nginxUrl"`
+		FetchViaProxy bool   `json:"fetchViaProxy"`
+	}{
+		WsUrl:         "ws://" + r.Host + "/echo",
+		NginxUrl:      fmt.Sprintf("http://localhost:%d", rsp.nginxPortOnHost),
+		FetchViaProxy: rsp.fetchViaProxy,
+	})
+
 	fileList := CollectRelativeFilePaths(rsp.webFilesPath)
 	data := struct {
-		WsUrl    string
+		// WsUrl         string
 		FileList []string
-		NginxUrl string
+		// NginxUrl      string
+		// FetchViaProxy string
+		AppInitParams template.JS
 	}{
-		WsUrl:    "ws://" + r.Host + "/echo",
+		// WsUrl:         "ws://" + r.Host + "/echo",
 		FileList: fileList,
-		NginxUrl: fmt.Sprintf("http://localhost:%d", rsp.nginxPortOnHost),
+		// NginxUrl:      fmt.Sprintf("http://localhost:%d", rsp.nginxPortOnHost),
+		// FetchViaProxy: rsp.fetchViaProxy,
+		AppInitParams: template.JS(jsonB),
 	}
+
 	homeTemplate.Execute(w, data)
+}
+
+func (rsp Responder) fetch(w http.ResponseWriter, r *http.Request) {
+	file := r.URL.Query().Get("file")
+
+	requestURL, _ := url.JoinPath("http://localhost", file)
+	log.Printf("making http request: %s\n", requestURL)
+	_, err := http.Get(requestURL)
+	if err != nil {
+		log.Printf("error making http request: %s\n", err)
+	}
 }
 
 type WsMessage struct {
 	Text string
 }
 
-func startWsServer(c chan WsMessage, addr string, nginxPortOnHost int, webPath string) {
+func startWsServer(c chan WsMessage, addr string, nginxPortOnHost int, webPath string, fetchViaProxy bool) {
 	// http.HandleFunc("/echo", echo)
-	responder := Responder{input: c, upgrader: upgrader, nginxPortOnHost: nginxPortOnHost, webFilesPath: webPath}
+	responder := Responder{input: c, upgrader: upgrader, nginxPortOnHost: nginxPortOnHost, webFilesPath: webPath, fetchViaProxy: fetchViaProxy}
 	http.HandleFunc("/echo", responder.echo)
+
+	http.HandleFunc("/fetch", responder.fetch)
 
 	fs := http.FileServer(http.Dir("./public/assets"))
 	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
@@ -94,7 +126,7 @@ You can change the message and send multiple times.
 <div id="output" style="max-height: 70vh;overflow-y: scroll;"></div>
 </td></tr></table>
 <script>
-	initApp({wsUrl: "{{.WsUrl}}", nginxUrl: "{{.NginxUrl}}"})
+	initApp({{.AppInitParams}})
 </script>
 </body>
 </html>
